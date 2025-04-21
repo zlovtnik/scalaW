@@ -59,6 +59,3 @@ lazy val root = (project in file("."))
       "org.scalatest" %% "scalatest" % "3.2.17" % Test
     )
   )
-
-// Add scalafmt plugin
-addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.2")
