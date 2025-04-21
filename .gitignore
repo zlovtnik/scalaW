@@ -1,0 +1,65 @@
+# Scala
+*.class
+*.log
+*.ctxt
+.metals/
+.bloop/
+.metals.sbt
+project/metals.sbt
+project/project/
+project/target/
+target/
+lib_managed/
+src_managed/
+.sbtopts
+.sbt/
+.cache/
+.history/
+.scala_dependencies
+.worksheet/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.idea_modules/
+
+# Eclipse
+.settings/
+.classpath
+.project
+.cache
+.scala_dependencies
+.metadata
+
+# OS specific
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build
+dist/
+build/
+out/
+target/
+
+# Misc
+*.swp
+*.swo
+*~
+*.bak
+*.tmp
+*.temp 
