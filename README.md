@@ -1,27 +1,27 @@
-# Scala GraphQL Oracle Integration
+# Integração Scala GraphQL com Oracle
 
-A secure GraphQL server built with Scala, Akka HTTP, and Oracle database integration, featuring Okta authentication and Apache Camel for ETL operations.
+Um servidor GraphQL seguro construído com Scala, Akka HTTP e integração com banco de dados Oracle, com autenticação Okta e Apache Camel para operações ETL.
 
-## Features
+## Funcionalidades
 
-- GraphQL API with Sangria implementation
-- Secure authentication using Okta
-- Oracle database integration
-- Apache Camel for ETL operations with parallel processing
-- Akka HTTP server running on port 4444
-- Spray JSON for request/response handling
+- API GraphQL com implementação Sangria
+- Autenticação segura usando Okta
+- Integração com banco de dados Oracle
+- Apache Camel para operações ETL com processamento paralelo
+- Servidor Akka HTTP rodando na porta 4444
+- Spray JSON para manipulação de requisições/respostas
 
-## Prerequisites
+## Pré-requisitos
 
 - Scala 2.13.12
 - sbt 1.10.11
-- Oracle Database (tested with Oracle 21c)
-- Okta Developer Account
+- Oracle Database (testado com Oracle 21c)
+- Conta de Desenvolvedor Okta
 - Java Azul Zulu 21 (https://www.azul.com/downloads/?version=java-21-lts&package=jdk)
 
-## Configuration
+## Configuração
 
-The application is configured through `src/main/resources/application.conf`:
+A aplicação é configurada através do arquivo `src/main/resources/application.conf`:
 
 ```hocon
 akka {
@@ -44,8 +44,8 @@ oracle {
 
 okta {
   org-url = "https://dev-123456.okta.com"
-  client-id = "your-client-id"
-  client-secret = "your-client-secret"
+  client-id = "seu-client-id"
+  client-secret = "seu-client-secret"
 }
 
 camel {
@@ -60,21 +60,21 @@ camel {
 }
 ```
 
-## Getting Started
+## Começando
 
-1. Clone the repository
-2. Update the configuration in `application.conf` with your Oracle and Okta credentials
-3. Run the application:
+1. Clone o repositório
+2. Atualize a configuração no `application.conf` com suas credenciais do Oracle e Okta
+3. Execute a aplicação:
 
 ```bash
 sbt run
 ```
 
-The server will start on `http://localhost:4444`
+O servidor será iniciado em `http://localhost:4444`
 
-## GraphQL API
+## API GraphQL
 
-### Example Query
+### Exemplo de Consulta
 
 ```graphql
 {
@@ -82,16 +82,16 @@ The server will start on `http://localhost:4444`
 }
 ```
 
-Response:
+Resposta:
 ```json
 {
   "data": {
-    "hello": "Hello, GraphQL!"
+    "hello": "Olá, GraphQL!"
   }
 }
 ```
 
-## Project Structure
+## Estrutura do Projeto
 
 ```
 src/
@@ -119,7 +119,7 @@ src/
                 └── MainSpec.scala
 ```
 
-## Dependencies
+## Dependências
 
 - Akka HTTP 10.5.3
 - Sangria GraphQL 4.0.2
@@ -128,14 +128,14 @@ src/
 - Apache Camel 3.20.5
 - Circe 0.14.6
 
-## Security
+## Segurança
 
-The application uses Okta for authentication. All GraphQL requests must include a valid authentication token in the header.
+A aplicação utiliza Okta para autenticação. Todas as requisições GraphQL devem incluir um token de autenticação válido no cabeçalho.
 
-## ETL Operations
+## Operações ETL
 
-Apache Camel is used for ETL operations with parallel processing support. The ETL routes are configured in `application.conf`.
+O Apache Camel é utilizado para operações ETL com suporte a processamento paralelo. As rotas ETL são configuradas no `application.conf`.
 
-## License
+## Licença
 
-This project is licensed under the MIT License - see the LICENSE file for details. 
+Este projeto está licenciado sob a Licença MIT - veja o arquivo LICENSE para detalhes. 

@@ -1,3 +1,18 @@
+/** Aplicação principal que configura e inicia o servidor GraphQL com integração
+  * Oracle.
+  *
+  * Este objeto é responsável por:
+  *   - Configurar o sistema Akka
+  *   - Inicializar o contexto Apache Camel para operações ETL
+  *   - Configurar autenticação Okta
+  *   - Inicializar repositórios de banco de dados
+  *   - Configurar e iniciar o servidor GraphQL
+  *   - Configurar verificações de saúde
+  *
+  * @author
+  *   Rafael Cardoso
+  * @version 1.0
+  */
 package com.example
 
 import akka.actor.ActorSystem
@@ -18,6 +33,11 @@ import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 import akka.http.scaladsl.server.Directives._
 
+/** Objeto principal que inicia a aplicação.
+  *
+  * Este objeto estende App e é o ponto de entrada da aplicação. Ele configura
+  * todos os componentes necessários e inicia o servidor HTTP.
+  */
 object Main extends App {
   private val logger = LoggerFactory.getLogger(getClass)
 
@@ -46,28 +66,33 @@ object Main extends App {
   logger.info("Initializing Apache Camel context...")
   val camelContext = new DefaultCamelContext()
 
-  // Configure Camel logging
-  val eventNotifier = new EventNotifierSupport {
-    override def notify(event: CamelEvent): Unit = {
-      event match {
-        case e: CamelEvent.CamelContextStartedEvent =>
-          logger.info("Camel context started")
-        case e: CamelEvent.CamelContextStoppingEvent =>
-          logger.info("Camel context stopping")
-        case e: CamelEvent.CamelContextStoppedEvent =>
-          logger.info("Camel context stopped")
-        case e: CamelEvent.RouteStartedEvent =>
-          logger.info(s"Route started: ${e.getRoute.getRouteId}")
-        case e: CamelEvent.RouteStoppedEvent =>
-          logger.info(s"Route stopped: ${e.getRoute.getRouteId}")
-        case _ => // Ignore other events
+  /** Configura e inicia o contexto Apache Camel para operações ETL.
+    *
+    * @param camelContext
+    *   O contexto Camel a ser configurado
+    */
+  private def configureCamelContext(camelContext: DefaultCamelContext): Unit = {
+    val eventNotifier = new EventNotifierSupport {
+      override def notify(event: CamelEvent): Unit = {
+        event match {
+          case e: CamelEvent.CamelContextStartedEvent =>
+            logger.info("Camel context started")
+          case e: CamelEvent.CamelContextStoppingEvent =>
+            logger.info("Camel context stopping")
+          case e: CamelEvent.CamelContextStoppedEvent =>
+            logger.info("Camel context stopped")
+          case e: CamelEvent.RouteStartedEvent =>
+            logger.info(s"Route started: ${e.getRoute.getRouteId}")
+          case e: CamelEvent.RouteStoppedEvent =>
+            logger.info(s"Route stopped: ${e.getRoute.getRouteId}")
+          case _ => // Ignore other events
+        }
       }
+
+      override def isEnabled(event: CamelEvent): Boolean = true
     }
-
-    override def isEnabled(event: CamelEvent): Boolean = true
+    camelContext.getManagementStrategy.addEventNotifier(eventNotifier)
   }
-
-  camelContext.getManagementStrategy.addEventNotifier(eventNotifier)
 
   val etlProcessor = new ETLProcessor(camelContext, dbConfig)
 
@@ -122,16 +147,26 @@ object Main extends App {
       system.terminate()
   }
 
-  sys.addShutdownHook {
-    logger.info("Shutting down...")
-    try {
-      logger.info("Stopping Apache Camel context...")
-      camelContext.stop()
-      logger.info("Apache Camel context stopped successfully")
-    } catch {
-      case e: Exception =>
-        logger.error("Error stopping Apache Camel context", e)
+  /** Configura os hooks de desligamento para garantir um encerramento limpo da
+    * aplicação.
+    *
+    * Este método é chamado quando a aplicação está sendo encerrada e garante
+    * que todos os recursos sejam liberados adequadamente.
+    */
+  private def setupShutdownHooks(): Unit = {
+    sys.addShutdownHook {
+      logger.info("Shutting down...")
+      try {
+        logger.info("Stopping Apache Camel context...")
+        camelContext.stop()
+        logger.info("Apache Camel context stopped successfully")
+      } catch {
+        case e: Exception =>
+          logger.error("Error stopping Apache Camel context", e)
+      }
+      system.terminate()
     }
-    system.terminate()
   }
+
+  setupShutdownHooks()
 }
