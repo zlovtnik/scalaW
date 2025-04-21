@@ -23,6 +23,13 @@ jobs:
         distribution: 'temurin'
         cache: 'sbt'
 
+    - name: Install SBT
+      run: |
+        curl -L https://github.com/sbt/sbt/releases/download/v1.9.8/sbt-1.9.8.tgz -o sbt.tgz
+        sudo tar -xf sbt.tgz -C /usr/local
+        echo "export PATH=\$PATH:/usr/local/sbt/bin" >> $GITHUB_ENV
+        rm sbt.tgz
+
     - name: Cache SBT
       uses: actions/cache@v4
       with:
